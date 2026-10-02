@@ -114,7 +114,17 @@ async function installApp(){
   if(deferredInstall){try{await deferredInstall.prompt();}catch(e){} deferredInstall=null;return}
   alert('To add Nomad Lines to your home screen, use your browser menu and choose “Add to Home screen” or “Install app”. On iPhone, use Share → Add to Home Screen.');
 }
-if('serviceWorker' in navigator && location.protocol!=='file:'){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=20261002-1',{updateViaCache:'none'}).catch(()=>{}));}
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js")
+      .then((registration) => {
+        console.log("Nomad Lines service worker registered:", registration.scope);
+      })
+      .catch((error) => {
+        console.error("Nomad Lines service worker registration failed:", error);
+      });
+  });
+}
 </script>
 </body>
 </html>
