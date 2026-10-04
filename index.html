@@ -52,7 +52,7 @@
 </div></div>
 <div id="subModal" class="gameover"><div class="gameover-card"><h2>Choose substitute</h2><div id="subPrompt" class="small"></div><div id="subOptions" class="sub-options"></div><div class="actions" style="justify-content:center"><button id="subCancel" type="button">Cancel</button></div></div></div>
 <div id="halftimeModal" class="gameover"><div class="gameover-card"><h2>Half time</h2><div id="halfTimeQuestion" style="font-size:22px;font-weight:800;margin:18px 0"></div><div class="actions" style="justify-content:center"><button id="halfTimeYes" class="primary" type="button">Yes</button></div></div></div>
-<div id="gameOver" class="gameover"><div class="gameover-card"><h2 id="gameOverTitle">Game Over</h2><div id="winner" class="winner"></div><div id="finalScore" style="font-size:42px;font-weight:900;margin:12px 0"></div><div class="small">First team to 15 wins.</div><div class="actions" style="justify-content:center;margin-top:18px"><button id="downloadCsv" class="primary">Download CSV</button><button id="newGame" class="primary">New game</button></div></div></div>
+<div id="gameOver" class="gameover"><div class="gameover-card"><h2 id="gameOverTitle">Game Over</h2><div id="winner" class="winner"></div><div id="finalScore" style="font-size:42px;font-weight:900;margin:12px 0"></div><div class="small">First team to 15 wins.</div><div class="actions" style="justify-content:center;margin-top:18px"><button id="downloadCsv" class="primary">Download CSV</button><button id="undoEndGame" type="button">Undo End Game</button><button id="newGame" class="primary">New game</button></div></div></div>
 </div>
 <script>
 const names=['Alex Rendall','Darren Curry','Bernard Strauss','Ceci van Zyl','David Pereira','James Granelli','Jason','Jonti','Joseph Goemans','Laura Granelli','Laurie Ann','Mia Salonen','Michelle Winter','Nathan Misdorp','Petra','Saskia Prevost','Tiaan','Tim Murphy','Tracey Hill','Wian van Zyl'];
@@ -101,7 +101,7 @@ function initNomad(){
   const startBtn=$('startMatch'); if(startBtn){ startBtn.addEventListener('click', startMatch); }
   $('selectAllPresent').onclick=()=>{players.forEach(p=>p.present=true);renderAttendance()};
   const subCancel=$('subCancel'); if(subCancel) subCancel.onclick=closeSubstitution; const halfBtn=$('halftime'), endBtn=$('endGame'), halfYes=$('halfTimeYes'); if(halfBtn) halfBtn.onclick=halfTime; if(endBtn) endBtn.onclick=endGame; if(halfYes) halfYes.onclick=confirmHalfTime;$('auto').onclick=auto;$('call').onclick=call;
-  $('usPoint').onclick=()=>score('us');$('themPoint').onclick=()=>score('them');$('undo').onclick=restore;$('newGame').onclick=newGame;
+  $('usPoint').onclick=()=>score('us');$('themPoint').onclick=()=>score('them');$('undo').onclick=restore;$('undoEndGame').onclick=restore;$('newGame').onclick=newGame;
   $('startRatio').onchange=()=>{if(!currentLine.length)render()};
   $('startPoss').onchange=()=>{if(!history.length&&!currentLine.length){pos=$('startPoss').value;render()}};
   renderAttendance();render();
@@ -114,17 +114,7 @@ async function installApp(){
   if(deferredInstall){try{await deferredInstall.prompt();}catch(e){} deferredInstall=null;return}
   alert('To add Nomad Lines to your home screen, use your browser menu and choose “Add to Home screen” or “Install app”. On iPhone, use Share → Add to Home Screen.');
 }
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./service-worker.js")
-      .then((registration) => {
-        console.log("Nomad Lines service worker registered:", registration.scope);
-      })
-      .catch((error) => {
-        console.error("Nomad Lines service worker registration failed:", error);
-      });
-  });
-}
+if('serviceWorker' in navigator && location.protocol!=='file:'){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js?v=20261002-1',{updateViaCache:'none'}).catch(()=>{}));}
 </script>
 </body>
 </html>
